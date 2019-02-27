@@ -1,0 +1,27 @@
+{
+  "name": "fuzzy-toolbox",
+  "version": "0.0.1",
+  "description": "A set of tools for using Fuzzy Logic in JavaScript",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/jest/bin/jest.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/valenvb/fuzzy-toolbox.git"
+  },
+  "keywords": [
+    "fuzzy",
+    "logic",
+    "fuzzy-logic"
+  ],
+  "author": "Valen Varangu-Booth",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/valenvb/fuzzy-toolbox/issues"
+  },
+  "homepage": "https://github.com/valenvb/fuzzy-toolbox#readme",
+  "devDependencies": {
+    "jest": "^24.1.0"
+  }
+}
