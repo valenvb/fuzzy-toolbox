@@ -3,6 +3,10 @@
  */
 
 class Set{
+    /**
+     * 
+     * @param  {...number} points 
+     */
     constructor(...points){
         if (points.length < 3 || points.length > 4){
             throw new RangeError('A set requires between 3 and 4 points.');
@@ -12,10 +16,18 @@ class Set{
         return true;
     }
 
+    /**
+     * The x value of the left leg
+     * @returns {number}
+     */
     min(){
         return this.array[0][0]
     }
 
+    /**
+     * The x value of the right leg
+     * @returns {number}
+     */
     max(){
         return this.array[this.array.length-1][0]
     }
