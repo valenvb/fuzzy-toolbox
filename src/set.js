@@ -13,11 +13,11 @@ class Set{
     }
 
     min(){
-        return this.array[0]
+        return this.array[0][0]
     }
 
     max(){
-        return this.array[this.array.length-1]
+        return this.array[this.array.length-1][0]
     }
 }
 
