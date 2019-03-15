@@ -54,7 +54,7 @@ class Set{
         const denom = 3*(top+base)
         return num/denom + this.array[0][0]
 
-    }
+    } //end _balance_trapezoid
 
     /**
      * Returns the membership in the fuzzy set of a given point
@@ -120,7 +120,7 @@ class Set{
             }
 
         }
-    }
+    } //end valueAt
 }
 
 
