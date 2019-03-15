@@ -116,4 +116,19 @@ describe('A set', ()=>{
 
     })
 
+    it('can be capped at a given value', ()=>{
+        expect(Set.capAt)
+        const s = new Set([-1,0], [0,1], [1,0])
+
+        const r = s.capAt(0.5)
+        expect(r.type).toBe(4)
+        expect(r.array).toEqual([ [-1,0], [-0.5, 0.5] , [0.5,0.5], [1,0] ])
+
+        const s2 = new Set([-2,0], [-1,1], [1,1], [2,0])
+
+        const r2 = s2.capAt(0.5)
+        expect(r2.type).toBe(4)
+        expect(r2.array).toEqual([ [-2,0], [-1.5, 0.5] , [1.5,0.5], [2,0] ])
+    })
+
 })

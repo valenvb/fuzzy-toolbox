@@ -126,6 +126,46 @@ class Set{
 
         }
     } //end valueAt
+
+    /**
+     * Copy this set to a new set where the maximum membership is capped at newMax
+     * @param {number} newMax 
+     * @returns {Set} A new Set that maxes out at the desired value
+     */
+    capAt(newMax){
+        if(newMax >= this.array[1][1]) {
+            return new Set(this.array)
+        }
+
+        let newPoints = [ this.array[0] ]
+
+        //calculate new left leg top
+
+        //is it vertical?
+        if(this.array[0][0] === this.array[1][0]){
+            newPoints.push( [ this.array[1][0], newMax ] )
+        } else {
+            let y = newMax
+            let leftSlope = (this.array[1][1] - this.array[0][1]) / (this.array[1][0] - this.array[0][0])
+            let x = ( (y-this.array[0][1]) / leftSlope ) + this.array[0][0] 
+            newPoints.push([x,y])
+        }
+
+        //calculate new right leg top
+        
+        //is is vertical?
+        if(this.array[this.type-1][0] === this.array[this.type-2][0]){
+            newPoints.push( [ this.array[this.type-2][0] , newMax] )
+        } else {
+            let y = newMax
+            let rightSlope = (this.array[this.type-1][1] - this.array[this.type-2][1]) / (this.array[this.type-1][0] - this.array[this.type-2][0])
+            let x = ( (y-this.array[this.type-2][1]) / rightSlope ) + this.array[this.type-2][0] 
+            newPoints.push([x,y])
+        }
+        newPoints.push( this.array[this.type -1] )
+
+        return new Set(newPoints)
+    }
 }
 
 
