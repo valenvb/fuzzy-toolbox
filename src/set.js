@@ -8,6 +8,11 @@ class Set{
      * @param  {...number} points 
      */
     constructor(...points){
+        if(points.length === 1){
+            if(points[0].length >= 3){
+                points = points[0]
+            }
+        }
         if (points.length < 3 || points.length > 4){
             throw new RangeError('A set requires between 3 and 4 points.');
         }
