@@ -4,10 +4,11 @@
 
 class Set{
     constructor(...points){
-        if (points.length < 2 || points.length > 4){
-            throw new RangeError('A set requires between 2 and 4 ');
+        if (points.length < 3 || points.length > 4){
+            throw new RangeError('A set requires between 3 and 4 points.');
         }
         this.array = points;
+        this.type = points.length 
         return true;
     }
 
