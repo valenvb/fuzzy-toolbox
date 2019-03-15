@@ -44,6 +44,71 @@ class Set{
 
     }
 
+    /**
+     * Returns the membership in the fuzzy set of a given point
+     * @param {number} point
+     * @returns {number}
+     */
+    valueAt(point){
+        if (point < this.min() || point > this.max()){
+            return 0;
+        }
+
+        let atPoint = this.array.filter(e=>e[0]===point).map(e=>e[1])
+        console.log(this.array)
+        console.log(atPoint)
+
+        if(atPoint.length > 0){
+            let maxAtPoint = atPoint.reduce((p,c)=>(c > p ? c : p))
+            return maxAtPoint;
+        }
+ 
+        if(this.type === 3){
+            //Triangle
+            if(point === this.array[1][0]) return this.array[1][1];
+
+
+            let m;
+
+            if(point < this.array[1][0]){
+                //calc for left leg
+                m = (this.array[1][1] - this.array[0][1])/(this.array[1][0] - this.array[0][0])
+                
+                
+
+            } else {
+                //calc for right leg
+                m = (this.array[2][1] - this.array[1][1])/(this.array[2][0] - this.array[1][0])
+            }
+
+            let y = m*(point - this.array[1][0])+this.array[1][1]
+
+            return y
+
+        } else if (this.type===4){
+            if(point >= this.array[1][0] && point <= this.array[2][0]) { return this.array[1][1] }
+
+            if(point < this.array[1][0]){
+                //left leg
+
+                let m = (this.array[1][1] - this.array[0][1])/(this.array[1][0] - this.array[0][0])
+
+                let y = m*(point - this.array[1][0])+this.array[1][1]
+
+                return y
+
+            } else if(point > this.array[2][0]){
+                // right leg
+                let m = (this.array[3][1] - this.array[2][1])/(this.array[3][0] - this.array[2][0])
+
+                let y = m*(point - this.array[3][0])+this.array[3][1]
+
+                return y
+
+            }
+
+        }
+    }
 }
 
 
