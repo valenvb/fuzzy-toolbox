@@ -22,8 +22,10 @@
   },
   "homepage": "https://github.com/valenvb/fuzzy-toolbox#readme",
   "devDependencies": {
-    "asciichart": "^1.5.7",
     "jest": "^24.1.0",
     "jest-cli": "^24.5.0"
+  },
+  "dependencies": {
+    "plotly": "^1.0.6"
   }
 }
