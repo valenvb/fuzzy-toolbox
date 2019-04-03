@@ -1,29 +1,34 @@
 'use strict';
-let Set = require('./set')
 
-/**
- * 
- * @param {Set} a 
- * @param {Set} b 
- * @param {And.T_NORMS} tnorm 
- */
-function And(a, b, tnorm){
-    if(!(a instanceof Set) || !(b instanceof Set)){
-        throw Error("Inputs must both be Fuzzy Sets")
+const And = {
+    godel : function(a, b){
+        return a<b? a : b; //min
+    },
+    goguen : function(a, b){
+        return a*b
+    },
+    luka : function(a, b){
+        let c = a+b -1
+        return c>0? c : 0;
+    },
+    hamaches : function(a, b){
+        if(a===0 && b === 0) return 0;
+        return (a*b) / ( (a+b) - (a*b) )
+    },
+    einstein : function(a, b){
+        return (a*b) / ( 2 - ( (a+b) - (a*b) ) )
+    },
+    nilpotent : function(a, b){
+        if(a+b > 1){
+            return a<b?a:b
+        } else return 0
+    },
+    drastic : function(a, b){
+        if(a==1 || b==1){
+            return a<b? a : b
+        }else return 0
     }
 
-    return a   
-}
-
-
-And.T_NORMS = {
-    GODEL : 0,
-    // goguen  : 1,
-    // lukachevicz : 2,
-    // hamacles : 3,
-    // eintstein : 4,
-    // nilpotent : 5,
-    // drastic : 6,
 }
 
 
