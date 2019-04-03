@@ -1,23 +1,27 @@
 /**
  * Define Fuzzy sets via membership functions, can also graph them on the command line for fun.
  */
+let plotly = require('plotly')
 
 class Set{
     /**
-     * 
+     * Constructs a Set object that represents a particular fuzzy entity
+     * @param {name} A string identifier for this set.
      * @param  {...number} points 
      */
-    constructor(...points){
+    constructor(name, ...points){
         if(points.length === 1){
             if(points[0].length >= 3){
                 points = points[0]
             }
         }
         if (points.length < 3 || points.length > 4){
-            throw new RangeError('A set requires between 3 and 4 points.');
+            console.log(points)
+            throw new RangeError('A set requires between 3 and 4 points. Received:' + points);
         }
         this.array = points;
-        this.type = points.length 
+        this.type = points.length
+        this.name = name;
         return true;
     }
 
@@ -37,6 +41,13 @@ class Set{
         return this.array[this.array.length-1][0]
     }
 
+    maxHeight(){
+        return this.array.map(x=>x[1]).reduce((p,c)=>p>c?p:c)
+    }
+
+    /**
+     * @return {number[]} [x,y] coordinates of centroid
+     */
     balance(){
         if(this.type===3){
             return this._balance_triangle()
@@ -47,7 +58,8 @@ class Set{
 
     _balance_triangle(){
         const xs = this.array.map(x=>x[0])
-        return xs.reduce((p,c)=>c+p)/3
+        const ys = this.array.map(y=>y[1])
+        return [ xs.reduce((p,c)=>c+p)/3, ys.reduce((p,c)=>c+p)/3 ]
     }
 
     _balance_trapezoid(){
@@ -57,7 +69,11 @@ class Set{
 
         const num = 2*top*c + top**2 + c*base + top*base + base**2
         const denom = 3*(top+base)
-        return num/denom + this.array[0][0]
+        const x = num/denom + this.array[0][0]
+
+        
+        const y = ( this.maxHeight()*( (2*top) + base) ) / ( 3*(top+base) )
+        return [x,y]
 
     } //end _balance_trapezoid
 
@@ -72,8 +88,8 @@ class Set{
         }
 
         let atPoint = this.array.filter(e=>e[0]===point).map(e=>e[1])
-        console.log(this.array)
-        console.log(atPoint)
+        //console.log(this.array)
+        //console.log(atPoint)
 
         if(atPoint.length > 0){
             let maxAtPoint = atPoint.reduce((p,c)=>(c > p ? c : p))
@@ -133,8 +149,9 @@ class Set{
      * @returns {Set} A new Set that maxes out at the desired value
      */
     capAt(newMax){
+        //console.log(`Capping At ${newMax}`)
         if(newMax >= this.array[1][1]) {
-            return new Set(this.array)
+            return new Set(this.name, this.array)
         }
 
         let newPoints = [ this.array[0] ]
@@ -164,7 +181,47 @@ class Set{
         }
         newPoints.push( this.array[this.type -1] )
 
-        return new Set(newPoints)
+        return new Set(this.name, newPoints)
+    }
+
+
+    plot(){
+        const plotData = this.array.map((elm)=>{
+            return {key: this.name, value: elm}
+        })
+
+
+        console.log(scatter(plotData, {side:1}))
+        
+    }
+
+    plotly(){
+        const x = this.array.map(x=>x[0])
+        const y = this.array.map(x=>x[1])
+        
+        return {x: x, y: y, type: "scatter", name: this.name}
+    }
+
+
+    static plot(user, pass, ...sets){
+        const data = sets.map(set=>{ 
+            return {
+                x : set.array.map(x=>x[0]),
+                y : set.array.map(x=>x[1]),
+                name : set.name,
+                type: "scatter" 
+            }
+         })
+//         const user, pass = login
+         let plotter = plotly(user, pass)
+         let name = data.map(elm=>elm.name).join('-')
+         let layout = {fileopt : "overwrite", filename : name};
+         plotter.plot(data, layout, function (err, msg) {
+            if (err) return console.log(err);
+            console.log(msg);
+        });
+
+
     }
 }
 
