@@ -1,9 +1,10 @@
 
 class Inference {
-    constructor( antecedent, consequent, operator){
+    constructor(antecedent, consequent, operator, logger){
         this.antecedent = antecedent
         this.consequent = consequent
         this.op = operator || "cap"
+        this.log = logger || function dummy(){}
     }
 
     /**
