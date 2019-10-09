@@ -1,2 +1,4 @@
 # fuzzy-toolbox
-A set of tools for using Fuzzy Logic in JavaScript
+
+A set of tools for using Fuzzy Logic in JavaScript.
+---
