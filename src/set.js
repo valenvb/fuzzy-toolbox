@@ -1,7 +1,6 @@
 /**
- * Define Fuzzy sets via membership functions, can also graph them on the command line for fun.
+ * Define Fuzzy sets via membership functions.
  */
-let plotly = require('plotly')
 
 class Set{
     /**
@@ -10,17 +9,20 @@ class Set{
      * @param  {...number} points 
      */
     constructor(name, ...points){
+        //This lets us accept either multiple parameters or a single array of points
         if(points.length === 1){
             if(points[0].length >= 3){
-                points = points[0]
+                points = points[0];
             }
         }
+
         if (points.length < 3 || points.length > 4){
-            console.log(points)
-            throw new RangeError('A set requires between 3 and 4 points. Received:' + points);
+            //console.log(points)
+            throw new RangeError('A set requires either 3 or 4 points. Received:' + points);
         }
+
         this.array = points;
-        this.type = points.length
+        this.type = points.length; //Number of points defines the Set type; 3: Triangle, 4: Trapezoid
         this.name = name;
         return true;
     }
@@ -41,27 +43,41 @@ class Set{
         return this.array[this.array.length-1][0]
     }
 
+    /**
+     * The maximum y value in the set
+     * @returns {number}
+     */
     maxHeight(){
         return this.array.map(x=>x[1]).reduce((p,c)=>p>c?p:c)
     }
 
     /**
-     * @return {number[]} [x,y] coordinates of centroid
+     * Find the centroid balance point of the Set
+     * NOTE: There are multiple ways of solving for this, ideally the library should support additional ones, or the injection of a custom one.
+     * @returns {number[]} [x,y] coordinates of centroid
      */
     balance(){
         if(this.type===3){
-            return this._balance_triangle()
+            return this._balance_triangle();
         } else {
-            return this._balance_trapezoid()
+            return this._balance_trapezoid();
         }
     }
 
+    /**
+     * Provide the balance center point for a triangle.
+     * @private
+     */
     _balance_triangle(){
         const xs = this.array.map(x=>x[0])
         const ys = this.array.map(y=>y[1])
         return [ xs.reduce((p,c)=>c+p)/3, ys.reduce((p,c)=>c+p)/3 ]
     }
 
+    /**
+     * Provide the balance center point for a trapezoid.
+     * @private
+     */
     _balance_trapezoid(){
         const top = this.array[2][0] - this.array[1][0]
         const c = this.array[1][0] - this.array[0][0]
@@ -144,7 +160,7 @@ class Set{
     } //end valueAt
 
     /**
-     * Copy this set to a new set where the maximum membership is capped at newMax
+     * Copy this set to a new set where the maximum membership is capped at a given value
      * @param {number} newMax 
      * @returns {Set} A new Set that maxes out at the desired value
      */
@@ -154,15 +170,16 @@ class Set{
             return new Set(this.name, this.array)
         }
 
-        let newPoints = [ this.array[0] ]
+        //the new set will begin at the same point the original does
+        let newPoints = [ this.array[0] ];
+
 
         //calculate new left leg top
-
         //is it vertical?
         if(this.array[0][0] === this.array[1][0]){
             newPoints.push( [ this.array[1][0], newMax ] )
         } else {
-            let y = newMax
+            let y = newMax;
             let leftSlope = (this.array[1][1] - this.array[0][1]) / (this.array[1][0] - this.array[0][0])
             let x = ( (y-this.array[0][1]) / leftSlope ) + this.array[0][0] 
             newPoints.push([x,y])
@@ -184,45 +201,6 @@ class Set{
         return new Set(this.name, newPoints)
     }
 
-
-    plot(){
-        const plotData = this.array.map((elm)=>{
-            return {key: this.name, value: elm}
-        })
-
-
-        console.log(scatter(plotData, {side:1}))
-        
-    }
-
-    plotly(){
-        const x = this.array.map(x=>x[0])
-        const y = this.array.map(x=>x[1])
-        
-        return {x: x, y: y, type: "scatter", name: this.name}
-    }
-
-
-    static plot(user, pass, ...sets){
-        const data = sets.map(set=>{ 
-            return {
-                x : set.array.map(x=>x[0]),
-                y : set.array.map(x=>x[1]),
-                name : set.name,
-                type: "scatter" 
-            }
-         })
-//         const user, pass = login
-         let plotter = plotly(user, pass)
-         let name = data.map(elm=>elm.name).join('-')
-         let layout = {fileopt : "overwrite", filename : name};
-         plotter.plot(data, layout, function (err, msg) {
-            if (err) return console.log(err);
-            console.log(msg);
-        });
-
-
-    }
 }
 
 
