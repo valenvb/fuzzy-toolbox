@@ -97,6 +97,4 @@ function defuzz(...sets){
 }
 
 
-module.exports.Antecedent = Antecedent
-module.exports.Inference = Inference
-module.exports.defuzzify = defuzz
+module.exports = { Antecedent, Inference, defuzz };
